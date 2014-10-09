@@ -10,6 +10,31 @@ class opscenter (
     $auth_enabled           = $opscenter::params::auth_enabled,
 ) inherits opscenter::params {
     #validation
+    validate_string($service_name)
+    validate_string($config_path)
+
+    if(!is_integer($webserver_port)) {
+        fail('webserver_port must be an integer')
+    }
+
+    if(!is_ip_address($webserver_interface)) {
+        fail('webserver_interface must be an IP address')
+    }
+
+    if(!empty($ssl_keyfile)) {
+        validate_string($ssl_keyfile)
+    }
+
+    if(!empty($ssl_certfile)) {
+        validate_string($ssl_certfile)
+    }
+
+    if(!empty($ssl_port) and !is_integer($ssl_port)) {
+        fail('ssl_port must be an integer')
+    }
+
+    validate_re($log_level, '^(TRACE|DEBUG|INFO|WARN|ERROR)$')
+    validate_bool($auth_enabled)
 
     anchor { 'opscenter::begin': }
 
