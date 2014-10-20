@@ -39,17 +39,15 @@ class opscenter (
     anchor { 'opscenter::begin': }
 
     class { 'opscenter::repo':
-        repo_name => $repo_name,
-        baseurl   => "http://${repo_baseurl}",
-        gpgkey    => $repo_gpgkey,
-        repos     => $repo_repos,
-        release   => $repo_release,
-        pin       => $repo_pin,
-        gpgcheck  => $repo_gpgcheck,
-        enabled   => $repo_enabled,
+      repo_name => $repo_name,
+      baseurl   => "http://${repo_baseurl}",
+      gpgkey    => $repo_gpgkey,
+      repos     => $repo_repos,
+      release   => $repo_release,
+      pin       => $repo_pin,
+      gpgcheck  => $repo_gpgcheck,
+      enabled   => $repo_enabled,
     }
-
-    Class['opscenter::repo'] -> Class['opscenter::install']
 
     include opscenter::install
     include opscenter::config
@@ -60,5 +58,10 @@ class opscenter (
 
     anchor { 'opscenter::end': }
 
-    Anchor['opscenter::begin'] -> Class['opscenter::install'] -> Class['opscenter::config'] ~> Class['opscenter::service'] -> Anchor['opscenter::end']
+    Anchor['opscenter::begin']
+      -> Class['opscenter::repo']
+      -> Class['opscenter::install']
+      -> Class['opscenter::config']
+      ~> Class['opscenter::service']
+    -> Anchor['opscenter::end']
 }

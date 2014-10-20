@@ -11,6 +11,5 @@ class opscenter::config {
     file { "${config_path}/opscenterd.conf":
         ensure  => file,
         content => template("${module_name}/opscenterd.conf.erb"),
-        require => Class['opscenter::install'],
     }
 }
